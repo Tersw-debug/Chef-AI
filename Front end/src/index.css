@@ -183,7 +183,7 @@ body {
     color: #6B7280;
 }
 
-.api_sumbit {
+.api_submit {
     margin-right: 42px;
     padding: 9px 17px;
     border-radius: 6px;
@@ -195,7 +195,7 @@ body {
     cursor: pointer;
 }
 
-.api_sumbit:active{
+.api_submit:active{
     transform: scale3d(0.98, 0.98, 1);
 }
 
@@ -219,4 +219,32 @@ body {
 
 .spacer_section {
     padding: 5em 0;
+}
+
+
+.loading_btn {
+    margin-right: 42px;
+    padding: 9px 17px;
+    border-radius: 6px;
+    background-color: black;
+    color: #FAFAF8;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.deleteBtn{
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 13px;
+    margin-left: 34em;
+    background-color: #D17557;
+    color: #FAFAF8;
+}
+
+.deleteBtn:hover{
+    background-color: #141413;
 }

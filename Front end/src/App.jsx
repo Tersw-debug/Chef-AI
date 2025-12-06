@@ -32,7 +32,7 @@ export default function App() {
 
     return (
         <Fragment>
-            <Header src={chefClaudeLogo} alt='Chef Claude Logo' classname="logo" name='Chef Claude' />
+            <Header src={chefClaudeLogo} alt='Chef Claude Logo' classname="logo" name='Chef AI' />
             <Main ingredient={ingredient} setIngredient={setIngredient}
                   response={response} setResponse={setResponse}
                   prompt={prompt} setPrompt={setPrompt}
