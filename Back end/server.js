@@ -1,23 +1,44 @@
 const express = require('express');
+const mongoose = require("mongoose");
 const app = express();
-const path = require('path');
 const errorHandler = require('./errorhandler');
-const {logger, logEvents} = require('./log/log');
+const { logger } = require('./log/log');
 const credentials = require('./credentials');
-process.loadEnvFile('.env');
-const port = process.env.PORT;
+require('dotenv').config();
+const cors = require('cors');
+const corsOptions = require('./config/cors');
+const cookieParser = require('cookie-parser');
+const port = process.env.PORT || 4000;
 
+// DB
+mongoose.connect(process.env.mongoDB)
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => console.error(err));
+
+// Middleware
 app.use(logger);
 app.use(credentials);
-
-app.use(express.urlencoded());
-
+app.use(cors(corsOptions));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cookieParser());
+// Routes
+app.use('/register', require('./register'));
 
-
-app.use(errorHandler);
-app.get('/', (req,res) => {
+/*app.use('/register', (req, res, next) => {
+    console.log("TESTING REGISTER ROUTE ACCESS");
+    next();
+}, (req, res) => {
+    res.send("If you see this, the basic route works.");
+});*/
+app.get('/', (req, res) => {
     res.send("Logger is active");
 });
 
-app.listen(port, () => console.log(`The Server is running at ${port}`));
+// ❗ ERROR HANDLER MUST BE HERE
+app.use(errorHandler);
+
+// ❗ LISTEN MUST BE LAST
+app.listen(port, () =>
+    console.log(`The Server is running at ${port}`)
+);

@@ -22,11 +22,12 @@ const logEvents = async (message, logName) =>{
 
 }
 
-const logger = (req,res,next) =>{
-    logEvents(`${req.method}\t${req.headers.origin}\t${req.url}`, 'log.txt');
+const logger = (req, res, next) => {
+    const origin = req.headers.origin || 'unknown';
+    logEvents(`${req.method}\t${origin}\t${req.url}`, 'log.txt')
+        .catch(err => console.error('Logging error:', err));
     console.log(`${req.method}\t${req.path}`);
-    next();
-}
-
+    next()
+};
 
 module.exports = { logger , logEvents }

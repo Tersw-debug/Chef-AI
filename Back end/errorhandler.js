@@ -1,8 +1,11 @@
-const {logger, logEvents} = require("./log/log");
+const { logEvents } = require("./log/log");
 
-const errorHandler = async (err,req,res,next) =>{
-    logEvents(`${err.name}:${err.message}`, 'log.txt');
-    next()
-}
+const errorHandler = (err, req, res, next) => {
+    logEvents(`${err.name}: ${err.message}`, 'log.txt');
 
-module.exports = errorHandler
+    res.status(500).json({
+        message: err.message
+    });
+};
+
+module.exports = errorHandler;
