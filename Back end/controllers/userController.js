@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs';
-import User from '../data/User.js';
+const bcrypt = require('bcrypt');
+const User = require('./../data/users');
 
 
 
@@ -8,12 +8,11 @@ const handleNewUser = async (req, res) => {
     if(!username || !email || !phone || !pwd) return res.status(400).json({
   message: 'username, password, email and phone are required'
 });
-     const duplicate = await User.findOne({
-    $or: [{ username : username }, { email:email }]
-  }).exec();
+    const duplicate = await User.findOne({
+    $or: [{ username : username }, { email:email }]});
     if(duplicate) return res.sendStatus(409); //Conflict
     try {
-        const salt = await bcrypt.genSalt(10);
+       const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(pwd,salt);
 
         const newUser = new User({
@@ -26,9 +25,9 @@ const handleNewUser = async (req, res) => {
         res.status(201).json({ 'message': `New user ${username} created successfully.` });
     }
     catch (err) {
-        res.status(500).json({ 'message': err.message });
+        console.error(err)
     }
 };
 
 
-export { handleNewUser};
+module.exports = handleNewUser;

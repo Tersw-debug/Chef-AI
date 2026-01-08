@@ -8,8 +8,9 @@ export default function App() {
     const [prompt, setPrompt] = useState("");
     
     const sendPrompt = async (prompt_message) => {
-        if (prompt_message !== prompt) {
-            console.log("Same prompt, not sending request.");   
+        if (prompt_message === prompt) {
+            console.log("Same prompt, not sending request.");
+            return;
         }
         try {
             const res = await fetch('http://localhost:8000/generate', {

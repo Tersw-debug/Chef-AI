@@ -28,13 +28,12 @@ const userSchema = new mongoose.Schema({
   refreshToken: String
 });
 
-userSchema.pre('validate', function(next) {
+userSchema.pre('validate', function() {
     const bannedUsers = ['root', 'admin', 'superuser'];
     if(bannedUsers.includes(this.username.toLowerCase()))
     {
         this.invalidate('username', 'that username is not allowed');
     }
-    next();
 });
 
 const User = mongoose.model('User', userSchema);

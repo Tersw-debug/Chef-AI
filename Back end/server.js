@@ -35,10 +35,10 @@ app.get('/', (req, res) => {
     res.send("Logger is active");
 });
 
-// ❗ ERROR HANDLER MUST BE HERE
+
 app.use(errorHandler);
 
-// ❗ LISTEN MUST BE LAST
+
 app.listen(port, () =>
     console.log(`The Server is running at ${port}`)
 );
