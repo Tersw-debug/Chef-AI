@@ -1,35 +1,41 @@
 import React, { Fragment, useState, useEffect } from "react";
+export default function Main(prop) {
 
-export default function Main(prop){
-    function handleIngredientChange(formData) {
+    function handleIngredientChange(e) {
+        e.preventDefault(); // 🚨 THIS FIXES EVERYTHING
+
+        const formData = new FormData(e.target);
         const ingredientInput = formData.get("ingredient_input");
-        if (ingredientInput === "") return;
-        prop.setIngredient(prevIngredient => ([...prevIngredient, 
-            {"id": Date.now(),"name":ingredientInput}]));
+
+        if (!ingredientInput) return;
+
+        prop.setIngredient(prev => [
+            ...prev,
+            { id: Date.now(), name: ingredientInput }
+        ]);
+
+        e.target.reset(); // optional UX improvement
     }
+
     return (
         <main className="main">
-            <form  action={handleIngredientChange} className="form__main">
+            <form onSubmit={handleIngredientChange} className="form__main">
                 <input
-                type="text"
-                name="ingredient_input"
-                id="input__form" 
-                placeholder="e.g. oregano"
-                className="input__form" 
-                aria-label="Add ingredient" />
-                <button className="button__form">Add ingredient</button>
+                    type="text"
+                    name="ingredient_input"
+                    placeholder="e.g. oregano"
+                    className="input__form"
+                />
+                <button type="submit" className="button__form">
+                    Add ingredient
+                </button>
             </form>
-            {prop.ingredient.length > 0 ?  <IngredientList
-                                                        setIngredient={prop.setIngredient} 
-                                                        ingredient={prop.ingredient}
-                                                        prompt={prop.prompt} 
-                                                        setPrompt={prop.setPrompt}
-                                                        response={prop.response}
-                                                        setResponse={prop.setResponse} 
-                                                        sendPrompt={prop.sendPrompt}
-                                                        /> : null}
+
+            {prop.ingredient.length > 0 && (
+                <IngredientList {...prop} />
+            )}
         </main>
-    )
+    );
 }
 
 
@@ -46,7 +52,13 @@ function IngredientList(prop) {
     const ingredientlist = prop.ingredient.map((item, key) => {
         return (
             <li key={key} className="ingredient__li">{item.name}
-                <button className="deleteBtn" onClick={() => deleteTask(item.id)}>Delete</button>
+                <button
+                    type="button"   // 🚨 REQUIRED
+                    className="deleteBtn"
+                    onClick={() => deleteTask(item.id)}
+                >
+                    Delete
+                </button>
             </li>
         )
 
@@ -67,12 +79,16 @@ function IngredientList(prop) {
         ,400);
         return () => clearInterval(interval)
     }, [loading]);
-
     async function calling() {
-        let message = `Create a recipe using ${prop.ingredient.map((i) => i.name).join(", ")}`;
-        prop.setPrompt(message);
+        const ingredients = prop.ingredient.map(i => i.name);
+
+        prop.setPrompt(ingredients.join(", ")); // UI display only
         setLoading(true);
-        await prop.sendPrompt(message);        
+
+        await prop.sendPrompt({
+            ingredients: ingredients
+        });
+
         setLoading(false);
     }
 
@@ -86,18 +102,40 @@ function IngredientList(prop) {
                                 <p className="asking__message_p">Ready for a recipe? </p>
                                 <p className="telling_message">Generate recipe from your list of ingredients.</p>
                             </div>
-                            <button className={`${loading? "loading_btn" : "api_submit"} `} onClick={calling} disabled={loading}>{buttonText}</button>
+                            <button
+                                type="button"   // 🚨 VERY IMPORTANT
+                                className={loading ? "loading_btn" : "api_submit"}
+                                onClick={calling}
+                                disabled={loading}
+                            >
+                                {buttonText}
+                            </button>
                         </div>: null}
                         <div className="spacer"></div>
             </section>
             <div className="spacer_section"></div>
             <section>
-                    {prop.response !== "" ? (
+                    {prop.response && (
                         <div className="response_message">
-                            <h2 className="recipe__title">Generated Recipe:</h2>
-                            <p className="recipe__description">{prop.response}</p>
+                            <h2 className="recipe__title">{prop.response.title}</h2>
+
+                            <h3 className='ingredients_h3'>Ingredients</h3>
+                            <ul className="ingredients_list">
+                                {prop.response.ingredients.map((i, idx) => (
+                                    <li key={idx}>{i}</li>
+                                ))}
+                            </ul>
+
+                            <h3 className="Steps_h3">Steps</h3>
+                            <ol className="Steps_list">
+                                {prop.response.steps.map((s, idx) => (
+                                    <li key={idx}>{s}</li>
+                                ))}
+                            </ol>
+
+                            <p className="cooking_time"><strong>Cooking time:</strong> {prop.response.cooking_time} minutes</p>
                         </div>
-                    ) : null}
+                    )}
             </section>
         </Fragment>
     )

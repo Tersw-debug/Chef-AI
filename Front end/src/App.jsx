@@ -4,31 +4,27 @@ import chefClaudeLogo from "/chef_claude_.png";
 import Main from "/component/Main.jsx";
 export default function App() {
     const [ingredient, setIngredient] = useState([]);
-    const [response, setResponse] = useState("");
+    const [response, setResponse] = useState(null);
     const [prompt, setPrompt] = useState("");
     
-    const sendPrompt = async (prompt_message) => {
-        if (prompt_message === prompt) {
-            console.log("Same prompt, not sending request.");
-            return;
-        }
+    const sendPrompt = async (payload) => {
         try {
-            const res = await fetch('http://localhost:8000/generate', {
+            const res = await fetch("http://localhost:8000/generate", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    text: prompt_message
-                }),
+                body: JSON.stringify(payload),
             });
+
             const data = await res.json();
-            setResponse(data.response);
-        }
-        catch (error) {
+            console.log("sendPrompt called");
+            console.log(data);
+            setResponse(data);   // ✅ correct
+        } catch (error) {
             console.error("Error fetching recipe:", error);
         }
-    }
+    };
 
 
     return (

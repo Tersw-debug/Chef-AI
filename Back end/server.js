@@ -25,12 +25,6 @@ app.use(cookieParser());
 // Routes
 app.use('/register', require('./register'));
 
-/*app.use('/register', (req, res, next) => {
-    console.log("TESTING REGISTER ROUTE ACCESS");
-    next();
-}, (req, res) => {
-    res.send("If you see this, the basic route works.");
-});*/
 app.get('/', (req, res) => {
     res.send("Logger is active");
 });
