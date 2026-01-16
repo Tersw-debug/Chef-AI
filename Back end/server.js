@@ -9,7 +9,7 @@ const cors = require('cors');
 const corsOptions = require('./config/cors');
 const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 4000;
-
+const verfiyJWT = require('./middleware/verifyJWT');
 // DB
 mongoose.connect(process.env.mongoDB)
     .then(() => console.log("MongoDB connected"))
@@ -24,7 +24,10 @@ app.use(express.json());
 app.use(cookieParser());
 // Routes
 app.use('/register', require('./register'));
+app.use('/auth', require('./auth'));
 
+
+app.use(verfiyJWT)
 app.get('/', (req, res) => {
     res.send("Logger is active");
 });
