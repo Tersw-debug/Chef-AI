@@ -5,3 +5,4 @@ package.json
 config
 .gitignore
 log/log.txt
+.gitignore
