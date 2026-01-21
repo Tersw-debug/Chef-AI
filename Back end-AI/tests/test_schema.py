@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+root_dir = Path(__file__).resolve().parents[1]
+sys.path.append(str(root_dir))
 from schema import RecipeRequest, RecipeResponse
 
 def test_vaild_RecipeRequest():
