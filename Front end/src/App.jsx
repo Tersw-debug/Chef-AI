@@ -15,6 +15,7 @@ export default function App() {
             const res = await fetch("http://localhost:4000/generate", {
                 method: "POST",
                 headers: {
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(payload),

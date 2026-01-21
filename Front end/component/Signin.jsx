@@ -45,6 +45,7 @@ export default function Signin() {
                 setSuccess(true);
                 setErrMsg("");
                 console.log(data.message);
+                navigate("/");
             } else if (response.status === 409) {
                 setErrMsg("Username or Email already taken.");
             } else if (response.status === 400) {
