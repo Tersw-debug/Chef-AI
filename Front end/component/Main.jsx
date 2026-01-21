@@ -115,7 +115,30 @@ function IngredientList(prop) {
             </section>
             <div className="spacer_section"></div>
             <section>
-                    {prop.response && (
+                {prop.response && (
+                    prop.notlimits === true ? (
+                        
+                        <div className="response_message">
+                            
+                            <h2 className="recipe__title">Success! {prop.response.title}</h2>
+                            
+                        </div>
+                    ) : (
+                        
+                        <div className="error_message" style={{color: 'red', padding: '20px'}}>
+                            <h2>⚠️ Limit Reached</h2>
+                            <p>You have exceeded the limits: {prop.response.error}</p>
+                        </div>
+                    )
+                )}
+            </section>
+        </Fragment>
+    )
+}
+
+
+
+/*
                         <div className="response_message">
                             <h2 className="recipe__title">{prop.response.title}</h2>
 
@@ -134,9 +157,4 @@ function IngredientList(prop) {
                             </ol>
 
                             <p className="cooking_time"><strong>Cooking time:</strong> {prop.response.cooking_time} minutes</p>
-                        </div>
-                    )}
-            </section>
-        </Fragment>
-    )
-}
+                        </div>*/

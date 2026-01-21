@@ -33,6 +33,15 @@ body {
 }
 
 
+.main_page_header,
+.main_page_header:hover,
+.main_page_header:visited,
+.main_page_header:active,
+.main_page_header:link{
+    color: inherit;
+    text-decoration: none;
+}
+
 .header_logo{
     display: flex;
     flex-direction: row;
