@@ -1,6 +1,6 @@
-user = require("../data/users")
-bcrypt = require('bcrypt')
-jwt = require('jsonwebtoken')
+const User = require("../data/users")
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 require('dotenv').config();
 
 const handleLogin = async (req,res,next) => {
@@ -8,13 +8,19 @@ const handleLogin = async (req,res,next) => {
     if(!user || !pwd) return res.status(400).json({
         mesage: 'username and password are required'
     });
-    const foundUser = await user.findOne({username: user}).exec();
+    const foundUser = await User.findOne({username: user});
+    const role = Object.values(foundUser.roles);
     if(!foundUser) return res.sendStatus(401);
 
     const match = await bcrypt.compare(pwd, foundUser.password);
     if(match) {
         const accessToken = jwt.sign(
-            {"username": foundUser.username},
+            {UserInfo: 
+                {
+                    id: foundUser._id,
+                    "username": foundUser.username,
+                    role
+                }},
             process.env.ACCESS_TOKEN_KEY,
             {expiresIn: '30m'}
         );
@@ -22,6 +28,7 @@ const handleLogin = async (req,res,next) => {
         res.json({ accessToken });
     }
     else {
+        
         res.sendStatus(401);
     }
 }

@@ -1,25 +1,33 @@
-const jwt = require('jsonwebtoken')
-require('dotenv').config();
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-const verfiyJWT = (req,res,next) => {
-    const authHeader = req.headers['authorization'];
+const verifyJWT = (req, res, next) => {
+    const authHeader = req.headers.authorization;
 
-    if(!authHeader) return res.sendStatus(401);
-    console.log(authHeader);
+    // No token → guest
+    if (!authHeader?.startsWith("Bearer ")) {
+        req.user = null;
+        return next();
+    }
 
+    const token = authHeader.split(" ")[1];
 
-    const token = authHeader.split(' ')[1];
-
-    jwt.verify(
-        token,
-        process.env.ACCESS_TOKEN_KEY,
-        (err, decoded) => {
-            console.log(err);
-            if(err) return res.sendStatus(403);
-            req.user = decoded.username;
-            next();
+    jwt.verify(token, process.env.ACCESS_TOKEN_KEY, (err, decoded) => {
+        if (err) {
+            req.user = null;
+            req.roles = null;
+            return next();
         }
-    );
-}
 
-module.exports = verfiyJWT;
+        req.user = {
+            id: decoded.UserInfo.id,
+            username: decoded.UserInfo.username
+        };
+
+        req.roles = decoded.UserInfo.roles;
+
+        next();
+    });
+};
+
+module.exports = verifyJWT;

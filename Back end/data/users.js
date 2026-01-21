@@ -25,6 +25,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+   roles: {
+    User: {
+      type: Number,
+      default: 100258
+    },
+    Admin: Number
+  },
   refreshToken: String
 });
 

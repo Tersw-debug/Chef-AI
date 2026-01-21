@@ -1,13 +1,13 @@
 const bcrypt = require('bcrypt');
 const User = require('./../data/users');
-
+const User_List = require('./../config/roles')
 
 
 const handleNewUser = async (req, res) => {
     const {username, email, phone, pwd} = req.body;
     if(!username || !email || !phone || !pwd) return res.status(400).json({
-  message: 'username, password, email and phone are required'
-});
+         message: 'username, password, email and phone are required'
+    });
     const duplicate = await User.findOne({
     $or: [{ username : username }, { email:email }]});
     if(duplicate) return res.sendStatus(409); //Conflict
@@ -19,7 +19,8 @@ const handleNewUser = async (req, res) => {
             username:username,
             email:email,
             phone:phone,
-            password:hash
+            password:hash,
+            roles: {User: User_List.User}
         });
         const result = await newUser.save();
         res.status(201).json({ 'message': `New user ${username} created successfully.` });
