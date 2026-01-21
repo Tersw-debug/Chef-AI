@@ -12,9 +12,18 @@ def run_agent(
 ) -> RecipeResponse:
 
     memory: List[dict] = [
-        {
+        {       
             "role": "system",
-            "content": "You are a ReAct-style chef agent. Think, then act using tools."
+            "content": """
+                You are a ReAct-style chef agent.
+
+                Rules:
+                - Use tools when needed.
+                - When you have enough information to produce the final recipe,
+                you MUST call the tool that returns a RecipeResponse.
+                - Once that tool is called, STOP.
+                - Do NOT continue thinking after producing the final recipe.
+                """
         },
         {
             "role": "user",
@@ -36,6 +45,9 @@ def run_agent(
         try:
             json_text = extract_json(output)
             thought = Thought(**json.loads(json_text))
+            logger.info(
+                f"Thought: {thought.reasoning} | Action: {thought.action}"
+            )
         except Exception as e:
             memory.append({
                 "role": "system",

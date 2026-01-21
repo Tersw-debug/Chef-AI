@@ -9,7 +9,7 @@ export default function App() {
     
     const sendPrompt = async (payload) => {
         try {
-            const res = await fetch("http://localhost:8000/generate", {
+            const res = await fetch("DFas", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
