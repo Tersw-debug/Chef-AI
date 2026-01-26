@@ -10,8 +10,11 @@ const corsOptions = require('./config/cors');
 const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 4000;
 const verfiyJWT = require('./middleware/verifyJWT');
-const quota = require("./middleware/quota")
+const quota = require("./middleware/quota");
+const {verifyEmail} = require('./controllers/authController');
+
 // DB
+
 mongoose.connect(process.env.mongoDB)
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.error(err));
@@ -28,18 +31,17 @@ app.use(cookieParser());
 // Routes
 app.use('/register', require('./register'));
 app.use('/auth', require('./auth'));
-
+app.use('/refresh', require('./refreshToken'));
+app.use('/logout', require('./logout'));
+app.get('/verifyemail/:verificationToken', verifyEmail, async (req,res) =>{
+    res.json({message:"i got it"});
+});
 
 app.use(verfiyJWT);
 
 app.post("/generate", quota, async (req,res) => {
     res.json({message:"prompt success"});
 });
-
-app.get('/', (req, res) => {
-    res.send("Logger is active");
-});
-
 
 app.use(errorHandler);
 

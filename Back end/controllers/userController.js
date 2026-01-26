@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('./../data/users');
-const User_List = require('./../config/roles')
-
+const User_List = require('./../config/roles');
+const sendEmail = require('../middleware/sendEmail');
 
 const handleNewUser = async (req, res) => {
     const {username, email, phone, pwd} = req.body;
@@ -20,10 +20,24 @@ const handleNewUser = async (req, res) => {
             email:email,
             phone:phone,
             password:hash,
-            roles: {User: User_List.User}
+            roles: {User: User_List.User},
+            isVerified: false
         });
+        const verificationToken = newUser.getVerifyToken();
+        
         const result = await newUser.save();
-        res.status(201).json({ 'message': `New user ${username} created successfully.` });
+
+        const verificationURL = `${req.protocol}://${req.get('host')}/verifyemail/${verificationToken}`
+
+        let message = `${verificationURL}`
+
+        await sendEmail({
+            email:email,
+            subject:"Email Verification",
+            message:message
+        });
+
+        res.status(201).json({ message: `New user ${username} created successfully but email needs to be Verified.`});
     }
     catch (err) {
         console.error(err)
@@ -31,4 +45,35 @@ const handleNewUser = async (req, res) => {
 };
 
 
-module.exports = handleNewUser;
+const handleLogout = async (req, res) => {
+    const cookies = req.cookies;
+
+    const refreshToken = cookies.jwt;
+    try{
+
+        const foundUser = await User.findOne({refreshTokens: refreshToken});
+    
+        if(foundUser)
+        {
+            foundUser.refreshTokens = foundUser.refreshTokens.filter(rt => rt !== refreshToken);
+            await foundUser.save();
+
+        }
+        
+        res.clearCookie('jwt', {
+            httpOnly:true,
+            sameSite:'None',
+            secure:false
+        });
+
+        res.sendStatus(204);
+    }catch(err){
+        console.log(err);
+        res.status(500).json({
+            message: 'Server error during email verification'
+        });
+    }
+}
+
+
+module.exports = {handleNewUser, handleLogout};

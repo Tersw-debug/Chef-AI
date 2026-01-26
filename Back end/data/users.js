@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
   username: {
@@ -32,7 +33,16 @@ const userSchema = new mongoose.Schema({
     },
     Admin: Number
   },
-  refreshToken: String
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
+  verificationToken: String,
+  verificationTokenExpiration: Date,
+  refreshTokens: {
+    type: [String],
+    default: []
+  }
 });
 
 userSchema.pre('validate', function() {
@@ -42,6 +52,17 @@ userSchema.pre('validate', function() {
         this.invalidate('username', 'that username is not allowed');
     }
 });
+
+userSchema.methods.getVerifyToken = function() {
+  const token = crypto.randomBytes(20).toString('hex');
+  
+  this.verificationToken = crypto.createHash('sha256').update(token).digest('hex');
+
+  this.verificationTokenExpiration = Date.now() + 30 * 60 * 1000;
+
+  return token;
+
+}
 
 const User = mongoose.model('User', userSchema);
 
