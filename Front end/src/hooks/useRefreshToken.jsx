@@ -5,23 +5,26 @@ const useRefreshToken = () => {
     const { setAuth } = useContext(AuthContext);
 
     const refresh = async () => {
-        const response = fetch("http://localhost:4000/refresh", {
-            method:"GET",
-            credentials:"include"
-        });
+         try {
+            const response = await fetch("http://localhost:4000/refresh", {
+                method: "GET",
+                credentials: "include"
+            });
 
-        if(!response) throw new Error("Refresh Error");
-        if(response.ok){
+            if (!response.ok) {
+                setAuth({ accessToken: null });
+                return null;
+            }
+
             const data = await response.json();
-            setAuth({accessToken: data.accessToken});
-
+            setAuth({ accessToken: data.accessToken });
             return data.accessToken;
-        }
-        else if(response.status == 401){
-            return response.status;
-        }
-        else if(response.status == 403){
-            return response.status;
+
+        } catch (err) {
+            setAuth({ accessToken: null });
+            return null;
+        } finally {
+            setLoading(false);
         }
         
     };

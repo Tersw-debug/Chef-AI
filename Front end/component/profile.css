@@ -1,0 +1,61 @@
+
+.profile_container{
+    place-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 2em;
+    padding: 4em;
+    width: 70%;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    
+}
+
+.h2_profile{
+    text-align: center;
+}
+
+
+.data_container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    list-style-type: none;
+}
+
+.container-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.edit_button{
+    color: #fafaf8c7;
+    background-color: #141413;
+    padding: 9px 14px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: calc(2em - 18px);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.edit_button:hover{
+    color: #FAFAF8;
+}
+
+.data_li{
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.li_frame{
+    
+}
+
+.data {
+    margin-left: 10px;
+}
+

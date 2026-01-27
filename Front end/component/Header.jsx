@@ -1,9 +1,31 @@
 import { Link } from 'react-router-dom';
 import { Fragment, useContext } from 'react';
 import AuthContext from "../src/context/authContext";
+import { useNavigate } from 'react-router-dom';
 
 export default function Header(prop){
-    const {auth} = useContext(AuthContext);
+    const {auth, setAuth} = useContext(AuthContext);
+    const navigate = useNavigate();
+    const currentToken = auth?.accessToken;
+    const handleLogout = async () =>{
+        try{
+            let response = await fetch("http://localhost:4000/logout", {
+                method:"POST",
+                headers:{
+                    'Authorization': `Bearer ${currentToken}`,
+                    "Content-Type": "application/json",
+                },
+                credentials:"include"
+            });
+            if(response.status == 204){
+                setAuth({});
+                navigate("/");
+            }
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     return (
         <header className="header">
             <div></div>
@@ -18,8 +40,10 @@ export default function Header(prop){
                         <Link to="/Signin" className="linktag_header">Sign in</Link>
                     </Fragment>
                 ) : (
-                    
-                    <button onClick={() => {}}>Log Out</button>
+                    <Fragment>
+                        <Link to="/Profile" className="linktag_header">Profile</Link>
+                        <button className='linktag_header' onClick={handleLogout}>Log Out</button>
+                    </Fragment>
                 )}
             </div>
         </header>

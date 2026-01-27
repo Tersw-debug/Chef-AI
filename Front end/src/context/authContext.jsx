@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => { // Fixed spelling: children
     const [auth, setAuth] = useState({
         accessToken: null
     });
-
+    const [loading, setLoading] = useState(true);
     return (
         <AuthContext.Provider value={{ auth, setAuth }}>
             {children} {/* Fixed spelling: children */}

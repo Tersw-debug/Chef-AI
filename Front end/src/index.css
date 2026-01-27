@@ -50,7 +50,7 @@ body {
 }
 
 .linktag_header{
-    color: #FAFAF8;
+    color: #fafaf8c7;
     background-color: #141413;
     padding: 9px 17px;
     text-decoration: none;
@@ -58,6 +58,10 @@ body {
     font-size: calc(2em - 18px);
     border-radius: 6px;
     cursor: pointer;
+}
+
+.linktag_header:hover{
+    color: #FAFAF8;
 }
 
 .linktag_header:active{
@@ -108,7 +112,7 @@ body {
 
 .button__form{
     padding: 9px 17px;
-    color: #FAFAF8;
+    color:  #fafaf8c7;
     background-color: #141413;
     border-radius: 6px;
     flex-grow: 0;
@@ -120,6 +124,10 @@ body {
     font-weight: 500;
     font-size: calc(1em - 2px);
     cursor: pointer;
+}
+
+.button__form:hover{
+    color: #FAFAF8;
 }
 
 .button__form:active{

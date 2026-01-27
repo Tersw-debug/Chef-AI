@@ -3,25 +3,32 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 require('dotenv').config();
+const {handleFailedLogin, resetLoginAttempts} = require("../utils/handleLoginAttempts");
 
 const handleLogin = async (req,res,next) => {
     const {user, pwd} = req.body;
-    if(!user || !pwd) return res.status(400).json({
-        mesage: 'username and password are required'
-    });
+    const ip = req.ip;
+    if(!user || !pwd){
+        await handleFailedLogin(user,ip);
+        return res.status(400).json({
+            mesage: 'username and password are required'
+        });
+    }
     const foundUser = await User.findOne({ username: user });
-    if (!foundUser) return res.sendStatus(401);
+    if (!foundUser){
+        await handleFailedLogin(user,ip);
+        return res.sendStatus(401);
+    }
 
     const role = Object.values(foundUser.roles);
     const match = await bcrypt.compare(pwd, foundUser.password);
-    console.log(foundUser.isVerified);
     if(match && foundUser.isVerified) {
 
         const accessToken = jwt.sign(
             {UserInfo: 
                 {
                     id: foundUser._id,
-                    "username": foundUser.username,
+                    username: foundUser.username,
                     role
                 }},
             process.env.ACCESS_TOKEN_KEY,
@@ -34,7 +41,7 @@ const handleLogin = async (req,res,next) => {
         );
         foundUser.refreshTokens.push(refreshToken);
         const result = await foundUser.save();
-
+        await resetLoginAttempts(user, ip);
         res.cookie('jwt',refreshToken,{
             httpOnly: true,
             secure:false,
@@ -45,6 +52,7 @@ const handleLogin = async (req,res,next) => {
         res.json({ accessToken });
     }
     else {
+        await handleFailedLogin(user,ip);
         console.log("unauzotirzed");
         res.sendStatus(401);
     }
@@ -54,7 +62,6 @@ const handleLogin = async (req,res,next) => {
 const verifyEmail = async (req,res) => {
     try{
         const token = req.params['verificationToken'];
-        console.log(token);
         const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
         const user = await User.findOne({
@@ -85,4 +92,7 @@ const verifyEmail = async (req,res) => {
 }
 
 
-module.exports = {handleLogin, verifyEmail}
+module.exports = {
+    handleLogin, 
+    verifyEmail
+};

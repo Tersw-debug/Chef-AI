@@ -4,9 +4,9 @@ require("dotenv").config();
 const verifyJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
 
-    // No token → guest
+    
     if (!authHeader?.startsWith("Bearer ")) {
-        req.user = null;
+        req.UserInfo = null;
         return next();
     }
 
@@ -14,18 +14,15 @@ const verifyJWT = (req, res, next) => {
 
     jwt.verify(token, process.env.ACCESS_TOKEN_KEY, (err, decoded) => {
         if (err) {
-            req.user = null;
-            req.roles = null;
+            req.UserInfo = null;
             return next();
         }
 
-        req.user = {
+        req.UserInfo = {
             id: decoded.UserInfo.id,
-            username: decoded.UserInfo.username
+            username: decoded.UserInfo.username,
+            role: decoded.UserInfo.role
         };
-
-        req.roles = decoded.UserInfo.role;
-
         next();
     });
 };

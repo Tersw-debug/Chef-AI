@@ -12,7 +12,7 @@ const handleNewUser = async (req, res) => {
     $or: [{ username : username }, { email:email }]});
     if(duplicate) return res.sendStatus(409); //Conflict
     try {
-       const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(10);
         const hash = await bcrypt.hash(pwd,salt);
 
         const newUser = new User({
@@ -72,10 +72,60 @@ const handleReVerification = async (req, res) => {
     }
 }
 
+const handleUserUpdate = async (req, res) => {
+    if (!req.UserInfo) return res.sendStatus(401);
 
+    const { username, email, phone, pwd } = req.body;
+
+    if (!username || !email || !phone)
+        return res.status(400).json({
+            message: 'username, email and phone are required'
+        });
+
+    try {
+        const update = { username, email, phone };
+
+        if (pwd) {
+            const hash = await bcrypt.hash(pwd, 10);
+            update.password = hash;
+        }
+
+        await User.findByIdAndUpdate(
+            req.UserInfo.id,
+            update
+        );
+
+        res.status(200).json({
+            message: 'Your data has been updated successfully.'
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+};
+
+const handleGetUser = async (req, res) => {
+    if (!req.UserInfo) return res.sendStatus(401);
+
+    try {
+        const foundUser = await User.findById(req.UserInfo.id)
+            .select('username email phone'); // no password
+
+        if (!foundUser) return res.sendStatus(404);
+
+        res.status(200).json(foundUser);
+
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+};
 
 const handleLogout = async (req, res) => {
     const cookies = req.cookies;
+
+    if (!cookies?.jwt) return res.sendStatus(204);
 
     const refreshToken = cookies.jwt;
     try{
@@ -105,4 +155,10 @@ const handleLogout = async (req, res) => {
 }
 
 
-module.exports = {handleReVerification ,handleNewUser, handleLogout};
+module.exports = {
+    handleReVerification ,
+    handleNewUser, 
+    handleLogout, 
+    handleGetUser , 
+    handleUserUpdate
+};

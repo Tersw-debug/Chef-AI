@@ -52,6 +52,10 @@ export default function Login() {
             {
                 setErrMsg("User and Password are Required.");
             }
+            else if(response.status == 429){
+                const data = await response.json();
+                setErrMsg(`${data.message}`)
+            }
             else {
                 setErrMsg("Something Wrong please try again.");
             }

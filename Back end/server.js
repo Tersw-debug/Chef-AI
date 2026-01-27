@@ -40,6 +40,8 @@ app.get('/verifyemail/:verificationToken', verifyEmail, async (req,res) =>{
 
 app.use(verfiyJWT);
 
+app.use('/profile', require('./profile'));
+
 app.post("/generate", quota, async (req,res) => {
     res.json({message:"prompt success"});
 });

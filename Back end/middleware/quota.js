@@ -4,20 +4,7 @@ const GUEST_LIMIT = 10;
 const USER_LIMIT = 50;
 const RESET = 24 * 60 * 60;
 
-const Redis = require("ioredis");
-const redis = new Redis({
-  host: "127.0.0.1",
-  port: 6379
-});
-
-redis.on("connect", () => {
-  console.log("Redis connected");
-});
-
-redis.on("error", (err) => {
-  console.error("Redis connection error:", err);
-});
-
+const redis = require('../config/redis');
 
 const quotaMiddleware = async (req, res, next) => {
   try {
@@ -33,7 +20,7 @@ const quotaMiddleware = async (req, res, next) => {
       const token = authHeader.split(' ')[1];
       try{
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_KEY);
-        req.user = decoded.UserInfo;
+        req.UserInfo = decoded.UserInfo;
         key = `quota:user:${req.user.id}`;
         limit = USER_LIMIT;
       }catch(err){

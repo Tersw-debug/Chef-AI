@@ -9,6 +9,7 @@ import { useContext } from "react";
 import AuthContext from "./context/authContext";
 import useRefreshToken from "./hooks/useRefreshToken";
 import Verification from "/component/verification.jsx";
+import Profile from "../component/Profile";
 
 export default function App() {
     const [ingredient, setIngredient] = useState([]);
@@ -91,6 +92,7 @@ export default function App() {
                     <Route path="/Login" element={<Login></Login>}></Route>
                     <Route path="/Signin" element={<Signin></Signin>}></Route>
                     <Route path="/Verification" element={<Verification></Verification>}></Route>
+                    <Route path="/Profile" element={<Profile></Profile>}></Route>
                 </Routes>
             </Fragment>
         
