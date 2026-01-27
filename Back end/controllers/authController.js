@@ -9,11 +9,12 @@ const handleLogin = async (req,res,next) => {
     if(!user || !pwd) return res.status(400).json({
         mesage: 'username and password are required'
     });
-    const foundUser = await User.findOne({username: user});
-    const role = Object.values(foundUser.roles);
-    if(!foundUser) return res.sendStatus(401);
+    const foundUser = await User.findOne({ username: user });
+    if (!foundUser) return res.sendStatus(401);
 
+    const role = Object.values(foundUser.roles);
     const match = await bcrypt.compare(pwd, foundUser.password);
+    console.log(foundUser.isVerified);
     if(match && foundUser.isVerified) {
 
         const accessToken = jwt.sign(
@@ -27,7 +28,7 @@ const handleLogin = async (req,res,next) => {
             {expiresIn: '30m'}
         );
         const refreshToken = jwt.sign(
-            { username:foundUser.username },
+            { id:foundUser._id },
             process.env.REFERESH_TOKEN_KEY,
             {expiresIn: '1d'}
         );
@@ -37,14 +38,14 @@ const handleLogin = async (req,res,next) => {
         res.cookie('jwt',refreshToken,{
             httpOnly: true,
             secure:false,
-            sameSite: 'None',
+            sameSite: 'Lax',
             maxAge: 24 * 60 * 60 * 1000
         });
 
         res.json({ accessToken });
     }
     else {
-        
+        console.log("unauzotirzed");
         res.sendStatus(401);
     }
 }
@@ -58,7 +59,7 @@ const verifyEmail = async (req,res) => {
 
         const user = await User.findOne({
             verificationToken: hashedToken,
-            verificationTokenExpiration:{$gt: Date.now()}
+            verificationTokenExpiration:{$gt: new Date()}
         });
 
         if(!user){
@@ -71,6 +72,7 @@ const verifyEmail = async (req,res) => {
         user.verificationToken = undefined;
         user.verificationTokenExpiration = undefined;
 
+        await user.save();
         res.status(200).json({
             message:`Email verified successfully`
         });

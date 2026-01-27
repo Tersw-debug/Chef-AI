@@ -45,6 +45,35 @@ const handleNewUser = async (req, res) => {
 };
 
 
+const handleReVerification = async (req, res) => {
+    const {email} = req.body;
+
+    if(!email){
+        return res.status(400).json({message: "Please type your email."});
+    }
+
+    const foundUser = await User.findOne({email:email});
+    if(!foundUser) return res.sendStatus(404);
+    if(foundUser.isVerified) return res.status(409).json({message: `Email is already verified`});
+    try{
+        const verificationToken = foundUser.getVerifyToken();
+        const result = await foundUser.save();
+        const verificationURL = `${req.protocol}://${req.get('host')}/verifyemail/${verificationToken}`
+
+        await sendEmail({
+            email:email,
+            subject:"Email Verification",
+            message:verificationURL
+        });
+
+        res.status(201).json({ message: `Verification message has sent successfully.`});
+    }catch(err){
+        console.log(err);
+    }
+}
+
+
+
 const handleLogout = async (req, res) => {
     const cookies = req.cookies;
 
@@ -62,7 +91,7 @@ const handleLogout = async (req, res) => {
         
         res.clearCookie('jwt', {
             httpOnly:true,
-            sameSite:'None',
+            sameSite:'Lax',
             secure:false
         });
 
@@ -76,4 +105,4 @@ const handleLogout = async (req, res) => {
 }
 
 
-module.exports = {handleNewUser, handleLogout};
+module.exports = {handleReVerification ,handleNewUser, handleLogout};

@@ -44,3 +44,16 @@
 .submit-btn:hover{
     background-color: #141413;
 }
+
+.emailVerification_message{
+    padding: 1em;
+    margin: 2em;
+    border-radius: 8px;
+    background-color: #D17557;
+    color: #FAFAF8;
+}
+
+.verification_link{
+    text-decoration: none;
+    color: black;
+}

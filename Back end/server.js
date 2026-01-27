@@ -33,6 +33,7 @@ app.use('/register', require('./register'));
 app.use('/auth', require('./auth'));
 app.use('/refresh', require('./refreshToken'));
 app.use('/logout', require('./logout'));
+app.use('/verification', require('./verification'));
 app.get('/verifyemail/:verificationToken', verifyEmail, async (req,res) =>{
     res.json({message:"i got it"});
 });

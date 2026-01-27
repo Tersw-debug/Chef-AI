@@ -13,7 +13,7 @@ const handleRefreshToken = async (req, res) => {
 
     res.clearCookie('jwt', {
         httpOnly: true,
-        sameSite: 'None',
+        sameSite: 'Lax',
         secure: false
     });
 
@@ -29,9 +29,7 @@ const handleRefreshToken = async (req, res) => {
                 process.env.REFERESH_TOKEN_KEY,
                 async (err, decoded) => {
                     if(!err){
-                        const hackedUser = await User.findOne({
-                            username: decoded.username
-                        });
+                        const hackedUser = await User.findById(decoded.id);
                         if(hackedUser){
                             hackedUser.refreshTokens = [];
                             await hackedUser.save();
@@ -50,7 +48,7 @@ const handleRefreshToken = async (req, res) => {
         refreshToken,
         process.env.REFERESH_TOKEN_KEY,
         async (err, decoded) =>{
-            if(err || decoded.username !== foundUser.username){
+            if(err ||  decoded.id.toString() !== foundUser._id.toString()){
                 foundUser.refreshTokens = newRefreshTokenArray;
                 await foundUser.save();
                 return res.sendStatus(403);
@@ -67,7 +65,7 @@ const handleRefreshToken = async (req, res) => {
             );
 
             const newRefreshToken = jwt.sign(
-                {username: foundUser.username},
+                {id: foundUser._id},
                 process.env.REFERESH_TOKEN_KEY,
                 {expiresIn: "1d"}
             );
@@ -78,7 +76,7 @@ const handleRefreshToken = async (req, res) => {
              res.cookie('jwt', newRefreshToken, {
                 httpOnly: true,
                 secure: false,
-                sameSite: 'None',
+                sameSite: 'Lax',
                 maxAge: 24 * 60 * 60 * 1000
             });
 
@@ -88,6 +86,7 @@ const handleRefreshToken = async (req, res) => {
     );
 
 }
+
 
 
 module.exports = handleRefreshToken

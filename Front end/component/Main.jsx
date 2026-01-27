@@ -84,7 +84,8 @@ function IngredientList(prop) {
 
         prop.setPrompt(ingredients.join(", ")); // UI display only
         setLoading(true);
-
+        
+        
         await prop.sendPrompt({
             ingredients: ingredients
         });

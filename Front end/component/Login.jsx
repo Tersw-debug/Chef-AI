@@ -1,5 +1,9 @@
 import "./login.css";
 import {useState} from "react";
+import { useContext } from "react";
+import AuthContext from "../src/context/authContext";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 export default function Login() {
     const [formData, setFormData] = useState({
         username: "",
@@ -8,7 +12,9 @@ export default function Login() {
 
     const [errMsg, setErrMsg] = useState("");
     const [success, setSuccess] = useState(false);
-    // Rename to 'handleChange' to match the JSX below
+    const { setAuth } = useContext(AuthContext);
+    const navigate = useNavigate();
+
     function handleChange(event) {
         const { name, value } = event.target;
         setFormData(prevData => ({
@@ -18,13 +24,14 @@ export default function Login() {
         setErrMsg("");
     }
 
-    // Rename to 'handleSubmit' to match the JSX below
+    
     async function handleSubmit(event) {
         event.preventDefault();
         try{
             const response = await fetch("http://localhost:4000/auth", {
                 method:"POST",
                 headers:{"Content-Type":"application/json"},
+                credentials: "include",
                 body: JSON.stringify({
                     user: formData.username,
                     pwd: formData.password
@@ -32,8 +39,9 @@ export default function Login() {
             });
             if(response.ok){
                 const data = await response.json();
-                localStorage.setItem("token", data.accessToken);
                 
+                setAuth({accessToken: data.accessToken});
+                console.log("finally log in");
                 navigate("/");
             }
             else if(response.status == 401)
@@ -84,6 +92,9 @@ export default function Login() {
 
                 <button type="submit" className="submit-btn">Log In</button>
             </form>
+            <div className="emailVerification_message">
+                <p>Didn't recieve email verification message yet?<Link to="/Verification" className="verification_link"> Click here</Link></p>
+            </div>
         </div>
     );
 }

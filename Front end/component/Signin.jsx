@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./signin.css";
+import { Link } from "react-router-dom";
 
 export default function Signin() {
     const [formData, setFormData] = useState({
@@ -43,9 +44,8 @@ export default function Signin() {
             if (response.status === 201) {
                 // Success!
                 setSuccess(true);
-                setErrMsg("");
-                console.log(data.message);
-                navigate("/");
+                setErrMsg("A verification Message has sent to your email please verify your email so you could log in");
+                
             } else if (response.status === 409) {
                 setErrMsg("Username or Email already taken.");
             } else if (response.status === 400) {
@@ -64,7 +64,7 @@ export default function Signin() {
     return (
         <div className="signin-container">
             <h1 className="h1">Create Account</h1>
-            {errMsg && <p style={{color:"red"}}>{errMsg}</p>}
+            {errMsg && <p style={{color:"red"}}>{errMsg}</p> /* Error Messafe */ } 
             <form onSubmit={handleSubmit} className="login-form">
                 <label htmlFor="username">Username</label>
                 <input 
@@ -75,7 +75,7 @@ export default function Signin() {
                     name="username" 
                     value={formData.username} 
                     onChange={handleChange} 
-                    required 
+                    required
                 />
 
                 <label htmlFor="email">Email</label>
@@ -112,6 +112,9 @@ export default function Signin() {
 
                 <button type="submit" className="submit-btn">Sign In</button>
             </form>
+            <div className="emailVerification_message">
+                <p>Didn't recieve email verification message yet?<Link to="/Verification" className="verification_link"> Click here</Link></p>
+            </div>
         </div>
     );
 }

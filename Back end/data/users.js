@@ -58,7 +58,7 @@ userSchema.methods.getVerifyToken = function() {
   
   this.verificationToken = crypto.createHash('sha256').update(token).digest('hex');
 
-  this.verificationTokenExpiration = Date.now() + 30 * 60 * 1000;
+  this.verificationTokenExpiration = new Date(Date.now() + 30 * 60 * 1000);
 
   return token;
 
