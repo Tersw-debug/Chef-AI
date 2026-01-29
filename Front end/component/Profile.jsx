@@ -7,11 +7,11 @@ export default function Profile() {
     const [edit, setEdit] = useState(false);
     const {auth} = useContext(AuthContext);
     const [errMsg, setErrMsg] = useState("");
+    const [success, setSuccess] = useState(false);
     const [formData, setFormData] = useState({
         username: "",
         email: "",
-        phone: "",
-        password: "dsadsacsasca"
+        phone: ""
     });
     useEffect(() => {
         const getData = async () => {
@@ -35,8 +35,7 @@ export default function Profile() {
                 setFormData({
                 username: data.username,
                 email: data.email,
-                phone: data.phone,
-                password: "" // never preload password
+                phone: data.phone// never preload password
                 });
             }
             } catch (err) {
@@ -73,7 +72,7 @@ export default function Profile() {
                 setErrMsg(`${data.message}`);
             }
             } catch (err) {
-            console.error(err);
+                console.error(err);
             }
         };
     const handleChange = (e) => {
@@ -91,10 +90,10 @@ export default function Profile() {
         updateData();
         setEdit(false);
     };
-    const password = "*".repeat(formData.password.length);
+    
     return (
         <div className="profile_container">
-            {errMsg && <p style={{color:"red"}}>{errMsg}</p>}
+            {errMsg && <p style={success === true? {color:"green"}: {color:"red"}} className="errorMsg">{errMsg}</p>}
             <div className="container-header">
                 <span></span>
                 <h2 className="h2_profile">Profile</h2>
@@ -158,20 +157,6 @@ export default function Profile() {
                         />
                     ) : (
                         <p className="data">{formData.phone}</p>
-                    )}
-                </li>
-                <li className="data_li">
-                    <span className="li_frame">Password</span>
-                    {edit ? (
-                        <input
-                            className="input_form"
-                            type="text"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                        />
-                    ) : (
-                        <p className="data">{password}</p>
                     )}
                 </li>
             </ul>

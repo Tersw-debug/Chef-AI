@@ -51,7 +51,10 @@
     gap: 7px;
 }
 
-
+.errorMsg{
+    text-align: center;
+    margin-bottom: 20px;
+}
 
 .data {
     margin-left: 10px;
