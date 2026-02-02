@@ -18,10 +18,11 @@ const quotaMiddleware = async (req, res, next) => {
     
     else {
       const token = authHeader.split(' ')[1];
+      console.log(jwt.decode(token));
       try{
         const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_KEY);
         req.UserInfo = decoded.UserInfo;
-        key = `quota:user:${req.user.id}`;
+        key = `quota:user:${req.UserInfo.id}`;
         limit = USER_LIMIT;
       }catch(err){
         console.log(err);

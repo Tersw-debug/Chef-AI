@@ -38,13 +38,17 @@ app.get('/verifyemail/:verificationToken', verifyEmail, async (req,res) =>{
     res.json({message:"i got it"});
 });
 
+app.post("/generate", quota, async (req,res) => {
+    res.json({message:"prompt success"}); //Change this to call your model bro
+
+    
+});
+
+
 app.use(verfiyJWT);
 
 app.use('/profile', require('./profile'));
 
-app.post("/generate", quota, async (req,res) => {
-    res.json({message:"prompt success"});
-});
 
 app.use(errorHandler);
 
