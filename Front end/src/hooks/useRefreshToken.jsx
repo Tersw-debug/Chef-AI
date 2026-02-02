@@ -23,8 +23,6 @@ const useRefreshToken = () => {
         } catch (err) {
             setAuth({ accessToken: null });
             return null;
-        } finally {
-            setLoading(false);
         }
         
     };
