@@ -10,6 +10,8 @@ import AuthContext from "./context/authContext";
 import useRefreshToken from "./hooks/useRefreshToken";
 import Verification from "/component/verification.jsx";
 import Profile from "../component/Profile";
+import ResestPassword from "../component/ResetPassword";
+import ResestPasswordForm from "../component/ResetPasswordForm";
 
 export default function App() {
     const [ingredient, setIngredient] = useState([]);
@@ -67,7 +69,7 @@ export default function App() {
                 setNotLimits(true);
             } else if (res.status === 429) {
                 const data = await res.json();
-                setResponse(data);
+                setResponse({ data,renderID: Date.now()});
                 setNotLimits(false);
             }
         } catch (error) {
@@ -93,6 +95,8 @@ export default function App() {
                     <Route path="/Signin" element={<Signin></Signin>}></Route>
                     <Route path="/Verification" element={<Verification></Verification>}></Route>
                     <Route path="/Profile" element={<Profile></Profile>}></Route>
+                    <Route path="/ResetPassword" element={<ResestPassword></ResestPassword>}></Route>
+                    <Route path="/ResetPasswordForm/:token" element={<ResestPasswordForm></ResestPasswordForm>}></Route>
                 </Routes>
             </Fragment>
         

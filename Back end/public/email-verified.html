@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Email Verified</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fafaf8;
+    font-family: Inter, system-ui, sans-serif;
+  }
+
+  .success-container {
+    text-align: center;
+  }
+
+  .check-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #2ecc71;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;
+    animation: pop 0.4s ease-out;
+  }
+
+  .check-circle svg {
+    width: 60px;
+    height: 60px;
+    stroke: white;
+    stroke-width: 6;
+    fill: none;
+  }
+
+  h1 {
+    color: #141413;
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: #6b7280;
+    font-size: 1rem;
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+</style>
+</head>
+
+<body>
+  <div class="success-container">
+    <div class="check-circle">
+      <svg viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12" />
+      </svg>
+    </div>
+
+    <h1>Email verified</h1>
+    <p>You can now safely log in to your account.</p>
+  </div>
+</body>
+</html>

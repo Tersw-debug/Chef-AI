@@ -26,6 +26,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
    roles: {
     User: {
       type: Number,
@@ -63,6 +65,23 @@ userSchema.methods.getVerifyToken = function() {
   return token;
 
 }
+
+userSchema.methods.getResetPasswordToken = function() {
+    // 1. Generate the raw token
+    const token = crypto.randomBytes(32).toString('hex');
+
+    // 2. Hash it and store it in the database
+    this.resetPasswordToken = crypto
+        .createHash("sha256")
+        .update(token)
+        .digest('hex');
+
+    // 3. Set the expiration (30 minutes from now)
+    this.resetPasswordExpires = new Date(Date.now() + 30 * 60 * 1000);
+
+    // 4. Return the raw token to be sent in the email
+    return token;
+};
 
 const User = mongoose.model('User', userSchema);
 

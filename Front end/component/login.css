@@ -6,14 +6,14 @@
     place-items: center;
     margin-top: 2rem;
 }
-
-.login-form{
+.login-form {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin: 2em;
-    padding: 4em;
-    width: 30%;
+    margin: 2em auto;
+    padding: 1.5rem; /* Reduced padding for mobile */
+    width: 90%;      /* Take up most of the screen on mobile */
+    max-width: 450px; /* Don't get wider than this on desktop */
     border-radius: 12px;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
@@ -56,4 +56,24 @@
 .verification_link{
     text-decoration: none;
     color: black;
+}
+
+.reset_password{
+    text-align: center;
+}
+.reset_password_link{
+    text-decoration: none;
+    color: black;
+}
+
+.reset_password_link:hover{
+    cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .login-form {
+    width: 30%; /* Or a fixed max-width */
+    padding: 4em; /* Bring back the large padding for big screens */
+    letter-spacing: none;
+    }
 }

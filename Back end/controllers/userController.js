@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const User = require('./../data/users');
 const User_List = require('./../config/roles');
 const sendEmail = require('../middleware/sendEmail');
+const crypto = require('crypto')
 
 const handleNewUser = async (req, res) => {
     const {username, email, phone, pwd} = req.body;
@@ -58,8 +59,14 @@ const handleReVerification = async (req, res) => {
     try{
         const verificationToken = foundUser.getVerifyToken();
         const result = await foundUser.save();
-        const verificationURL = `${req.protocol}://${req.get('host')}/verifyemail/${verificationToken}`
-
+        const verificationURL = `
+                    <p>Please verify your email by clicking the button below:</p>
+                            <a href="${req.protocol}://${req.get('host')}/verifyemail/${verificationToken}" 
+                                style="padding:10px 15px;background:#007bff;color:white;text-decoration:none;border-radius:5px;">
+                                Verify Email
+                            </a>
+        `
+        
         await sendEmail({
             email:email,
             subject:"Email Verification",
@@ -155,10 +162,80 @@ const handleLogout = async (req, res) => {
 }
 
 
+const handleResetPassword = async (req, res) => {
+    const {email} = req.body;
+
+    if(!email){
+        return res.status(400).json({message: "Please type your email."});
+    }
+
+    const foundUser = await User.findOne({email:email});
+    if (!foundUser) {
+        return res.json({
+            message: "If the email exists, a reset link was sent."
+        });
+    }
+    try {
+        const token = foundUser.getResetPasswordToken();
+        await foundUser.save();
+        const resetURL = `${req.protocol}://${req.get('host')}/password/reset-password/${token}`;
+
+        const resetPassword = ` <p>You requested a password reset.</p>
+                                <p><a href="${resetURL}">Click here to reset your password</a></p>
+                                <p>This link expires in 15 minutes.</p>
+                            `;
+
+        await sendEmail({
+            email:email,
+            subject:"Reset Your Password",
+            message:resetPassword
+        });
+        return res.status(200).json({
+          message: "Password reset link sent to your email"
+        });
+    }catch (err){
+        console.log(err);
+    }
+}
+
+const resetPasswordConfirm = async (req, res) => {
+  const { token, password } = req.body;
+
+
+  if (!password || password.length < 8) {
+    return res.status(400).json({ message: "Password too short" });
+  }
+
+
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+  const now = new Date();
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpires: { $gt: now },
+  });
+  
+  if (!user) {
+    return res.status(400).json({ message: "Token invalid or expired" });
+  }
+
+  user.password = await bcrypt.hash(password, 10);
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
+
+  res.json({ message: "Password reset successful" });
+};
+
+
 module.exports = {
     handleReVerification ,
     handleNewUser, 
     handleLogout, 
     handleGetUser , 
-    handleUserUpdate
+    handleUserUpdate,
+    handleResetPassword,
+    resetPasswordConfirm
 };

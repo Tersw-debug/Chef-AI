@@ -33,10 +33,15 @@ app.use('/register', require('./register'));
 app.use('/auth', require('./auth'));
 app.use('/refresh', require('./refreshToken'));
 app.use('/logout', require('./logout'));
+
+
 app.use('/verification', require('./verification'));
+
+
 app.get('/verifyemail/:verificationToken', verifyEmail, async (req,res) =>{
-    res.json({message:"i got it"});
+    res.sendFile(path.join(__dirname, 'public', 'email-verified.html'));
 });
+
 
 app.post("/generate", quota, async (req,res) => {
     res.json({message:"prompt success"}); //Change this to call your model bro
@@ -44,6 +49,7 @@ app.post("/generate", quota, async (req,res) => {
     
 });
 
+app.use('/password', require('./resetpassword'));
 
 app.use(verfiyJWT);
 

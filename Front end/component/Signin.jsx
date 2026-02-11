@@ -111,6 +111,7 @@ export default function Signin() {
                 />
 
                 <button type="submit" className="submit-btn">Sign In</button>
+                <Link to="/ResetPassword" className="reset_password_link"><p className="reset_password">did you forgot your password?</p></Link>
             </form>
             <div className="emailVerification_message">
                 <p>Didn't recieve email verification message yet?<Link to="/Verification" className="verification_link"> Click here</Link></p>

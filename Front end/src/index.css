@@ -254,6 +254,27 @@ body {
     cursor: pointer;
 }
 
+
+.api_submit:disabled, 
+.loading_btn:disabled {
+    cursor: not-allowed;
+    background-color: #bdbdbd; /* Muted grey */
+    color: #6e6e6e;           /* Dimmed text color */
+    opacity: 0.7;             /* Makes it look slightly faded */
+    border: 1px solid #9e9e9e;
+    
+    /* This stops the 'pop' or 'scaling' animation you have on :active */
+    transform: none; 
+ 
+
+}
+
+/* Ensure that hover effects don't happen when disabled */
+.api_submit:disabled:hover {
+    background-color: #bdbdbd; /* Keep it grey even if hovered */
+    
+}
+
 .deleteBtn{
     width: 90px;              
     min-width: 90px;
@@ -320,4 +341,98 @@ body {
     font-size: 1.25rem;
     font-weight: 500;
     font-family: 'Inter', sans-serif;
+}
+
+.error_message{
+    background-color: #F0EFEB;
+    padding: 1.5em 2.5em;
+    border-radius: 8px;
+    animation: dropRipple 0.8s ease-out forwards;
+}
+
+@keyframes dropRipple {
+    0% {
+        transform: translateY(-20px); /* Start slightly above */
+        opacity: 0;
+    }
+    20% {
+        transform: translateY(10px);  /* "Drop" down past the center */
+        opacity: 1;
+    }
+    40% {
+        transform: translateY(-6px);  /* Bounce back up slightly */
+    }
+    60% {
+        transform: translateY(3px);   /* Small ripple down */
+    }
+    80% {
+        transform: translateY(-1px);  /* Tiny ripple up */
+    }
+    100% {
+        transform: translateY(0);     /* Settle at the original spot */
+    }
+}
+
+
+@media (max-width: 600px) and (min-width: 480px) {
+    .header {
+        padding: 1rem 1.5rem; /* Much smaller padding for mobile */
+        flex-direction: row; /* Keep logo and buttons on one line if possible */
+        gap: 10px;
+    }
+    
+    .logo {
+        width: 40px; /* Scale down the logo slightly */
+    }
+    
+    .title_h1 {
+        font-size: 1.6rem; /* Make the text smaller so it fits */
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .header_links {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .form__main {
+    flex-direction: column;
+  }
+
+  .input__form,
+  .button__form {
+    width: 100%;
+  }
+    .ingredient__li {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .deleteBtn {
+    width: 100%;
+  }
+  .recipe__message {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .api_submit {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .asking__message {
+    margin-left: 0;
+  }
 }

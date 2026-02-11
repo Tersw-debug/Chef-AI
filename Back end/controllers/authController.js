@@ -59,7 +59,7 @@ const handleLogin = async (req,res,next) => {
 }
 
 
-const verifyEmail = async (req,res) => {
+const verifyEmail = async (req,res,next) => {
     try{
         const token = req.params['verificationToken'];
         const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
@@ -80,9 +80,7 @@ const verifyEmail = async (req,res) => {
         user.verificationTokenExpiration = undefined;
 
         await user.save();
-        res.status(200).json({
-            message:`Email verified successfully`
-        });
+        next()
     } catch(err){
         console.log(err);
         res.status(500).json({

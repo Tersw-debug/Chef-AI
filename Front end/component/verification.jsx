@@ -48,7 +48,7 @@ export default function Verification() {
     return(
         <>
             <div className="signin-container">
-            <h1 className="h1">Create Account</h1>
+            <h1 className="h1">Verification Message</h1>
             {errMsg && <p style={{color:"red"}}>{errMsg}</p> /* Error Message */ } 
             {success && <p style={{color:"green"}}>{success}</p> /* Success Message */ } 
                 <form onSubmit={handleSubmit} className="login-form">

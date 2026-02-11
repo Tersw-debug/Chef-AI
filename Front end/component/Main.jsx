@@ -107,7 +107,7 @@ function IngredientList(prop) {
                                 type="button"   // 🚨 VERY IMPORTANT
                                 className={loading ? "loading_btn" : "api_submit"}
                                 onClick={calling}
-                                disabled={loading}
+                                disabled={loading || prop.notlimits === false}
                             >
                                 {buttonText}
                             </button>
@@ -126,7 +126,7 @@ function IngredientList(prop) {
                         </div>
                     ) : (
                         
-                        <div className="error_message" style={{color: 'red', padding: '20px'}}>
+                        <div key={prop.response.renderID} className="error_message">
                             <h2>⚠️ Limit Reached</h2>
                             <p>You have exceeded the limits: {prop.response.error}</p>
                         </div>

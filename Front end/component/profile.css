@@ -60,3 +60,26 @@
     margin-left: 10px;
 }
 
+@media (max-width: 435px) {
+    
+    .container-header{
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .data_li{
+        font-size: clamp(14px, 1.2vw, 18px);
+        min-width: 0;
+    }
+    .data,
+    .data_li {
+        overflow-wrap: break-word;
+        word-break: break-word;
+        white-space: normal;
+    }
+    .profile_container {
+        width: 100%;
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+}
