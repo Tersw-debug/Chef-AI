@@ -12,9 +12,11 @@ const port = process.env.PORT || 4000;
 const verfiyJWT = require('./middleware/verifyJWT');
 const quota = require("./middleware/quota");
 const {verifyEmail} = require('./controllers/authController');
-
+const dns = require('dns');
+const axios = require('axios');
 // DB
 
+dns.setServers(['8.8.8.8', '8.8.4.4']); 
 mongoose.connect(process.env.mongoDB)
     .then(() => console.log("MongoDB connected"))
     .catch(err => console.error(err));
@@ -44,9 +46,25 @@ app.get('/verifyemail/:verificationToken', verifyEmail, async (req,res) =>{
 
 
 app.post("/generate", quota, async (req,res) => {
-    res.json({message:"prompt success"}); //Change this to call your model bro
+    console.log("got things", req.body); //Change this to call your model bro
+    try{
+        const prompt = req.body;
+        const response = await axios.post("http://localhost:8000/generate", prompt, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        res.status(200).json(response.data);
+    }catch(err){
+        console.error("Error communicating with model API: ", err.message);
 
-    
+        const status = err.response ? err.response.status : 500;
+        const message = err.response ? err.response.data : "Internal server error";
+
+        res.status(status).json({err: message});
+    }
+
 });
 
 app.use('/password', require('./resetpassword'));

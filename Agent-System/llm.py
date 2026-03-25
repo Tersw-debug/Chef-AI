@@ -5,8 +5,11 @@ import os
 import json
 from schema import RecipeResponse
 HF_API_KEY = os.getenv("READ__TOKEN__ACCESS")
+if not HF_API_KEY:
+    print("❌ ERROR: API Key not found! Check your .env or environment variables.")
+else:
+    print(f"✅ API Key loaded (starts with: {HF_API_KEY[:5]}...)")
 client = InferenceClient(
-    provider="hf-inference",
     api_key=HF_API_KEY,
 )
 
@@ -24,7 +27,7 @@ def call_llm(messages, max_retries=3):
 
     for attempt in range(max_retries):
         completion = client.chat.completions.create(
-            model="HuggingFaceTB/SmolLM3-3B",
+            model="deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
             messages=messages,
         )
 

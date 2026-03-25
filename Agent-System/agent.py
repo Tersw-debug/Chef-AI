@@ -8,7 +8,7 @@ from logging_config import logger
 def run_agent(
     input: RecipeRequest,
     max_steps: int = 5,
-    model: str = "HuggingFaceTB/SmolLM3-3B",
+    model: str = "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B",
 ) -> RecipeResponse:
 
     memory: List[dict] = [

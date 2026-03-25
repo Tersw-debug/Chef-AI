@@ -107,7 +107,7 @@ function IngredientList(prop) {
                                 type="button"   // 🚨 VERY IMPORTANT
                                 className={loading ? "loading_btn" : "api_submit"}
                                 onClick={calling}
-                                disabled={loading || prop.notlimits === false}
+                                disabled={loading || prop.notlimits === true}
                             >
                                 {buttonText}
                             </button>
@@ -118,29 +118,7 @@ function IngredientList(prop) {
             <section>
                 {prop.response && (
                     prop.notlimits === true ? (
-                        
-                        <div className="response_message">
-                            
-                            <h2 className="recipe__title">Success! {prop.response.title}</h2>
-                            
-                        </div>
-                    ) : (
-                        
-                        <div key={prop.response.renderID} className="error_message">
-                            <h2>⚠️ Limit Reached</h2>
-                            <p>You have exceeded the limits: {prop.response.error}</p>
-                        </div>
-                    )
-                )}
-            </section>
-        </Fragment>
-    )
-}
-
-
-
-/*
-                        <div className="response_message">
+                         <div className="response_message">
                             <h2 className="recipe__title">{prop.response.title}</h2>
 
                             <h3 className='ingredients_h3'>Ingredients</h3>
@@ -158,4 +136,30 @@ function IngredientList(prop) {
                             </ol>
 
                             <p className="cooking_time"><strong>Cooking time:</strong> {prop.response.cooking_time} minutes</p>
-                        </div>*/
+                        </div>
+                       
+                    ) : (
+                        
+                        <div key={prop.response.renderID} className="error_message">
+                            <h2>⚠️ Limit Reached</h2>
+                            <p>You have exceeded the limits: {prop.response.error}</p>
+                        </div>
+                    )
+                )}
+            </section>
+        </Fragment>
+    )
+}
+
+
+
+/*
+ <div className="response_message">
+                            
+                            <h2 className="recipe__title">Success! {prop.response.title}</h2>
+                            
+                        </div>
+
+
+
+                       */
