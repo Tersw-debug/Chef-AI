@@ -1,0 +1,33 @@
+# Use Node 20 slim to keep the image size small
+FROM node:20-slim AS builder
+
+# Install build dependencies for 'bcrypt'
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy dependency files first for better caching
+COPY package*.json ./
+
+# Install dependencies
+# We use --omit=dev to keep the production image light
+RUN npm install --omit=dev
+
+# Final Stage
+FROM node:20-slim
+
+WORKDIR /app
+
+# Copy only the necessary files from the builder
+COPY --from=builder /app/node_modules ./node_modules
+COPY . .
+
+# Expose the port your server.js uses (likely 3000 or 8080)
+EXPOSE 4000
+
+# Start the application
+CMD ["node", "server.js"]
