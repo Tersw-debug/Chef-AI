@@ -1,6 +1,6 @@
-# 🤖 Chef AI – Agentic AI Web Application (Gemini-like System)
+# 🤖 Chef AI – Agentic AI Web Application
 
-Chef AI is a full-stack **agentic AI web application** inspired by systems like Gemini.
+Chef AI is a full-stack **agentic AI web application** inspired by systems.
 
 It combines:
 - A modern React frontend
