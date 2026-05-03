@@ -251,3 +251,8 @@ Backend supports Docker deployment:
 
 docker build -t chef-ai-backend .
 docker run -p 5000:5000 chef-ai-backend
+
+
+📜 License
+
+For educational and research purposes.
