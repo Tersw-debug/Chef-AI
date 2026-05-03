@@ -1,6 +1,6 @@
 # 🤖 Chef AI – Agentic AI Web Application
 
-Chef AI is a full-stack **agentic AI web application** inspired by systems.
+Chef AI is a full-stack **agentic AI web application**.
 
 It combines:
 - A modern React frontend
