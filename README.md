@@ -95,6 +95,7 @@ This is the **AI brain of the system**.
 
 ## 🧱 Project Architecture
 
+```
 📦 Chef AI System
 │
 ├── 🎨 Frontend (React)
@@ -115,7 +116,7 @@ This is the **AI brain of the system**.
 ├── Tool System
 ├── Prompt Engineering
 └── Structured Reasoning Layer
-
+```
 
 ---
 
@@ -174,6 +175,7 @@ This is the **AI brain of the system**.
 ## 📂 Project Structure
 
 ### 🤖 ReAct Agent System
+```
 Re-Act Agent/
 ├── agent.py
 ├── app.py
@@ -184,12 +186,12 @@ Re-Act Agent/
 ├── logging_config.py
 ├── logs/
 └── tests/
-
+```
 
 ---
 
 ### ⚙️ Backend
-
+```
 Backend/
 ├── server.js
 ├── auth.js
@@ -201,12 +203,12 @@ Backend/
 ├── middleware/
 ├── utils/
 └── public/
-
+```
 
 ---
 
 ### 🎨 Frontend
-
+```
 Frontend/
 ├── index.html
 ├── vite.config.js
@@ -216,7 +218,7 @@ Frontend/
 │ ├── context/
 │ └── hooks/
 └── public/
-
+```
 
 ---
 
