@@ -13,7 +13,7 @@ The system is designed to simulate an **intelligent AI assistant capable of reas
 
 ## 🧠 System Overview
 
-Chef AI is built as a multi-layer AI architecture:
+Chef AI is built as a **multi-layer AI architecture**:
 ```
 Frontend (React)
 ↓
