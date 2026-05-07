@@ -12,7 +12,8 @@ The system is designed to simulate an **intelligent AI assistant capable of reas
 ---
 
 ## 🧠 System Overview
-"""
+
+```
 Chef AI is built as a **multi-layer AI architecture**:
 Frontend (React)
 ↓
@@ -23,7 +24,7 @@ Auth / Quota / Email / Redis / MongoDB
 ReAct Agent System (Python + FastAPI)
 ↓
 LLM + Tools + Agent Loop
-"""
+```
 
 ---
 
